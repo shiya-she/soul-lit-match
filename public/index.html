@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>寻隐者 — 灵魂文学家匹配测试</title>
+<style>
+:root {
+  --bg: #0f0f1a; --card-bg: #1a1a2e; --text: #e0d8c8; --text-dim: #8b8680;
+  --accent: #c9a96e; --accent-glow: #e8d5a3; --option-bg: #222236;
+  --option-hover: #2a2a44; --progress-bg: #2a2a3a; --divider: #333350;
+  --font-serif: 'Noto Serif SC', 'STSong', 'Songti SC', 'SimSun', serif;
+  --font-sans: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --radius: 12px; --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg); color: var(--text); font-family: var(--font-sans);
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(201,169,110,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(180,160,200,0.04) 0%, transparent 50%);
+}
+.container { width:100%; max-width:600px; padding:40px 24px; }
+.card { background:var(--card-bg); border-radius:var(--radius); padding:48px 40px; border:1px solid var(--divider); box-shadow:0 4px 24px rgba(0,0,0,0.3); }
+
+.welcome-title { font-family:var(--font-serif); font-size:2rem; text-align:center; color:var(--accent-glow); margin-bottom:8px; letter-spacing:0.05em; }
+.welcome-subtitle { text-align:center; color:var(--text-dim); font-size:0.9rem; margin-bottom:32px; letter-spacing:0.1em; }
+.welcome-desc { text-align:center; color:var(--text); font-size:0.95rem; line-height:1.8; margin-bottom:36px; }
+.welcome-desc span { color:var(--accent); }
+.quote-divider { width:40px; height:1px; background:var(--accent); margin:20px auto; opacity:0.5; }
+.btn-start { display:block; width:100%; max-width:240px; margin:0 auto; padding:14px 0; background:linear-gradient(135deg, var(--accent), #b8943e); color:#1a1a2e; border:none; border-radius:8px; font-size:1.05rem; font-weight:600; cursor:pointer; transition:var(--transition); letter-spacing:0.05em; }
+.btn-start:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(201,169,110,0.3); }
+.welcome-footer { text-align:center; color:var(--text-dim); font-size:0.75rem; margin-top:24px; }
+
+.quiz-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+.quiz-counter { color:var(--text-dim); font-size:0.85rem; }
+.progress-bar { flex:1; height:3px; background:var(--progress-bg); border-radius:2px; margin:0 16px; overflow:hidden; }
+.progress-fill { height:100%; background:linear-gradient(90deg, var(--accent), var(--accent-glow)); border-radius:2px; transition:width 0.5s ease; }
+.quiz-question { font-family:var(--font-serif); font-size:1.25rem; text-align:center; margin-bottom:36px; line-height:1.6; color:var(--text); min-height:80px; display:flex; align-items:center; justify-content:center; }
+.quiz-options { display:flex; flex-direction:column; gap:12px; }
+.option-btn { display:flex; align-items:center; gap:12px; padding:18px 20px; background:var(--option-bg); border:1px solid var(--divider); border-radius:var(--radius); color:var(--text); font-size:0.95rem; cursor:pointer; transition:var(--transition); text-align:left; font-family:var(--font-sans); }
+.option-btn:hover { background:var(--option-hover); border-color:var(--accent); transform:translateX(4px); }
+.option-btn .emoji { font-size:1.5rem; flex-shrink:0; }
+
+@keyframes fadeInUp { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
+.fade-in { animation:fadeInUp 0.4s ease forwards; }
+
+.result-header { text-align:center; margin-bottom:28px; }
+.result-badge { display:inline-block; padding:4px 16px; background:rgba(201,169,110,0.15); border:1px solid rgba(201,169,110,0.3); border-radius:20px; color:var(--accent); font-size:0.8rem; letter-spacing:0.05em; margin-bottom:12px; }
+.result-portrait { font-size:4rem; text-align:center; margin-bottom:12px; animation:fadeInUp 0.6s ease, pulse 2s ease-in-out infinite 0.6s; }
+.result-name { font-family:var(--font-serif); font-size:2rem; text-align:center; color:var(--accent-glow); margin-bottom:4px; }
+.result-title { text-align:center; color:var(--text-dim); font-size:0.85rem; margin-bottom:4px; }
+.result-era { text-align:center; color:var(--text-dim); font-size:0.75rem; margin-bottom:16px; }
+.result-quote { text-align:center; font-family:var(--font-serif); font-style:italic; color:var(--text); font-size:0.95rem; padding:16px 20px; background:var(--option-bg); border-radius:var(--radius); border-left:3px solid var(--accent); margin-bottom:20px; line-height:1.7; }
+.result-works { text-align:center; color:var(--text-dim); font-size:0.82rem; margin-bottom:24px; }
+.result-keywords { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-bottom:28px; }
+.keyword-tag { padding:4px 12px; background:rgba(201,169,110,0.1); border-radius:14px; font-size:0.78rem; color:var(--accent); }
+.dimensions-analysis { margin-bottom:28px; }
+.dimensions-title { font-size:0.85rem; color:var(--text-dim); text-align:center; margin-bottom:16px; letter-spacing:0.05em; }
+.dim-item { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.dim-label { width:50px; font-size:0.8rem; color:var(--text-dim); text-align:right; }
+.dim-bar-wrap { flex:1; height:6px; background:var(--progress-bg); border-radius:3px; position:relative; overflow:visible; }
+.dim-bar { height:100%; border-radius:3px; transition:width 1s ease 0.3s; }
+.dim-bar.left { background:linear-gradient(90deg, var(--accent), var(--accent-glow)); }
+.dim-bar.right { background:linear-gradient(90deg, #6b5b8a, #8b7baa); }
+.dim-indicator { position:absolute; top:-3px; width:12px; height:12px; border-radius:50%; background:white; border:2px solid var(--accent); transform:translateX(-50%); transition:left 1s ease 0.3s; }
+.dim-label-right { width:50px; font-size:0.8rem; color:var(--text-dim); text-align:left; }
+.match-reason { padding:20px; background:var(--option-bg); border-radius:var(--radius); margin-bottom:24px; }
+.match-reason-title { font-size:0.85rem; color:var(--accent); margin-bottom:8px; letter-spacing:0.05em; }
+.match-reason-text { font-size:0.9rem; color:var(--text); line-height:1.8; }
+.result-actions { display:flex; gap:12px; }
+.btn-retry { flex:1; padding:12px 0; background:var(--option-bg); color:var(--text); border:1px solid var(--divider); border-radius:8px; font-size:0.9rem; cursor:pointer; transition:var(--transition); }
+.btn-retry:hover { border-color:var(--accent); background:var(--option-hover); }
+.btn-share { flex:1; padding:12px 0; background:linear-gradient(135deg, var(--accent), #b8943e); color:#1a1a2e; border:none; border-radius:8px; font-size:0.9rem; font-weight:600; cursor:pointer; transition:var(--transition); }
+.btn-share:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(201,169,110,0.3); }
+@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+
+.loading-text { text-align:center; color:var(--text-dim); padding:40px 0; font-size:0.95rem; }
+.error-text { text-align:center; color:#c77; padding:40px 0; font-size:0.95rem; }
+
+@media (max-width:480px) { .container{padding:20px 12px;} .card{padding:32px 20px;} .welcome-title{font-size:1.6rem;} .quiz-question{font-size:1.1rem;min-height:60px;} .result-name{font-size:1.6rem;} .result-actions{flex-direction:column;} }
+</style>
+</head>
+<body>
+<div class="container"><div class="card" id="app">
+  <!-- Welcome -->
+  <div v-if="page === 'welcome'">
+    <h1 class="welcome-title">寻隐者</h1>
+    <p class="welcome-subtitle">SOUL LITERATI · 灵魂文学家匹配测试</p>
+    <div class="quote-divider"></div>
+    <p class="welcome-desc">
+      在文学的星空中，<span>每一位伟大的作家都是一颗独特的星球</span>。<br>
+      有些炽烈如太阳，有些清冷如月亮，有些深邃如黑洞。<br><br>
+      通过 <span>12 道灵魂拷问</span>，我们将为你在这片星空中，<br>
+      找到那颗<span>与你共振频率最相近的文学之星</span>。
+    </p>
+    <button class="btn-start" @click="startQuiz">开始寻隐</button>
+    <p class="welcome-footer">约需 3-5 分钟 · 共 12 题</p>
+  </div>
+
+  <!-- Quiz -->
+  <div v-else-if="page === 'quiz' && currentQ">
+    <div class="quiz-header fade-in" :key="'h'+currentQ.id">
+      <span class="quiz-counter">第 {{ currentIdx + 1 }} / {{ questions.length }} 题</span>
+      <div class="progress-bar"><div class="progress-fill" :style="{width: (currentIdx / questions.length * 100) + '%'}"></div></div>
+    </div>
+    <div class="quiz-question fade-in" :key="'q'+currentQ.id">{{ currentQ.text }}</div>
+    <div class="quiz-options fade-in" :key="'o'+currentQ.id">
+      <button class="option-btn" @click="answer('A')"><span class="emoji">{{ currentQ.emojiA }}</span><span>{{ currentQ.optA }}</span></button>
+      <button class="option-btn" @click="answer('B')"><span class="emoji">{{ currentQ.emojiB }}</span><span>{{ currentQ.optB }}</span></button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div v-else-if="page === 'loading'" class="loading-text">🔮 正在寻找你的灵魂文学家...</div>
+
+  <!-- Error -->
+  <div v-else-if="page === 'error'" class="error-text">
+    {{ errorMsg }}<br><br>
+    <button class="btn-retry" @click="reset" style="width:auto;display:inline-block;padding:10px 24px;">↩ 返回重试</button>
+  </div>
+
+  <!-- Result -->
+  <div v-else-if="page === 'result' && result">
+    <div class="result-header fade-in">
+      <div class="result-badge">YOUR SOUL MATCH</div>
+      <div class="result-portrait">{{ result.writer.portrait }}</div>
+      <div class="result-name">{{ result.writer.name }}</div>
+      <div class="result-title">{{ result.writer.title }}</div>
+      <div class="result-era">{{ result.writer.era }}</div>
+    </div>
+    <div class="result-quote fade-in">「{{ result.writer.quote }}」</div>
+    <div class="result-works fade-in">📖 代表作：{{ result.writer.works }}</div>
+    <div class="result-keywords fade-in">
+      <span v-for="kw in result.writer.keywords.split('·')" class="keyword-tag">{{ kw.trim() }}</span>
+    </div>
+    <div class="dimensions-analysis fade-in">
+      <div class="dimensions-title">🧬 你的文学灵魂维度</div>
+      <div v-for="dim in result.dimensions" class="dim-item">
+        <div class="dim-label">{{ dim.left.emoji }} {{ dim.left.label }}</div>
+        <div class="dim-bar-wrap">
+          <div v-if="getBar(dim).lw>0" class="dim-bar left" :style="{width: getBar(dim).lw+'%'}"></div>
+          <div v-if="getBar(dim).rw>0" class="dim-bar right" :style="{width: getBar(dim).rw+'%'}"></div>
+          <div class="dim-indicator" :style="{left: getBar(dim).ip+'%'}"></div>
+        </div>
+        <div class="dim-label-right">{{ dim.right.label }} {{ dim.right.emoji }}</div>
+      </div>
+    </div>
+    <div class="match-reason fade-in">
+      <div class="match-reason-title">💫 为什么是 {{ result.writer.name }}？</div>
+      <div class="match-reason-text">{{ result.writer.matchReason }}</div>
+    </div>
+    <div class="result-actions fade-in">
+      <button class="btn-retry" @click="reset">🔄 再做一次</button>
+      <button class="btn-share" @click="share">📤 分享结果</button>
+    </div>
+  </div>
+</div></div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script>
+const { createApp } = Vue
+
+createApp({
+  data() {
+    return {
+      page: 'welcome',
+      questions: [],
+      dimensions: [],
+      currentIdx: 0,
+      answers: {},
+      result: null,
+      errorMsg: '',
+    }
+  },
+  computed: {
+    currentQ() {
+      return this.questions[this.currentIdx] || null
+    }
+  },
+  async mounted() {
+    try {
+      const res = await fetch('/api/questions')
+      if (!res.ok) throw new Error('加载失败')
+      const data = await res.json()
+      this.questions = data.questions
+      this.dimensions = data.dimensions
+    } catch (e) {
+      this.page = 'error'
+      this.errorMsg = '无法加载测试数据，请刷新页面重试'
+    }
+  },
+  methods: {
+    startQuiz() {
+      this.answers = {}
+      this.currentIdx = 0
+      this.page = 'quiz'
+    },
+    answer(choice) {
+      this.answers[this.currentQ.id] = choice
+      if (this.currentIdx < this.questions.length - 1) {
+        this.currentIdx++
+      } else {
+        this.submit()
+      }
+    },
+    async submit() {
+      this.page = 'loading'
+      try {
+        const res = await fetch('/api/match', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ answers: { ...this.answers } }),
+        })
+        if (!res.ok) {
+          const err = await res.json()
+          throw new Error(err.message || '匹配失败')
+        }
+        this.result = await res.json()
+        this.page = 'result'
+      } catch (e) {
+        this.page = 'error'
+        this.errorMsg = e.message || '网络错误，请重试'
+      }
+    },
+    reset() {
+      this.page = 'welcome'
+      this.result = null
+    },
+    getBar(dim) {
+      const abs = Math.abs(dim.score)
+      return {
+        ip: dim.score >= 0 ? (50 - abs * 16.7) : (50 + abs * 16.7),
+        lw: dim.score >= 0 ? Math.max(abs * 33.3, 2) : 0,
+        rw: dim.score < 0 ? Math.max(abs * 33.3, 2) : 0,
+      }
+    },
+    share() {
+      const m = this.result.writer
+      const text = `我在「寻隐者」文学灵魂测试中匹配到了 ${m.name}（${m.title}）！\n"${m.quote}"\n我的灵魂类型码：${this.result.typeCode}\n来测测你的文学之魂 👉`
+      if (navigator.share) {
+        navigator.share({ title: '寻隐者 · 灵魂文学家匹配', text })
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => alert('结果已复制到剪贴板，粘贴分享给朋友吧 ✨'))
+      } else {
+        alert(text)
+      }
+    }
+  }
+}).mount('#app')
+</script>
+</body>
+</html>

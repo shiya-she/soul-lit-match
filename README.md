@@ -2,55 +2,89 @@
 
 > 在文学的星空中，找到那颗与你灵魂共振的星球。
 
-类似 MBTI 的人格测试 Web 应用。12 道题定位 4 个文学维度倾向，从 16 位伟大文学家中匹配最灵魂契合的一位。
-
-## 四个维度
-
-| 维度 | 左极 | 右极 |
-|------|------|------|
-| 世界观 | 🌙 浪漫 (R) | 🌍 现实 (Z) |
-| 创作观 | 💜 感性 (G) | 🧠 理性 (L) |
-| 美学观 | 🏛 古典 (D) | 🚀 先锋 (F) |
-| 表达观 | 🔮 内省 (N) | 📢 外放 (W) |
-
-## 16 位文学家
-
-李清照、李白、村上春树、聂鲁达、陶渊明、苏轼、博尔赫斯、王小波、曹雪芹、杜甫、张爱玲、鲁迅、司马迁、蒙田、钱锺书、乔治·奥威尔
-
-## 部署
-
-纯静态文件，零依赖。3 种方式任选：
-
-```bash
-# 1. 直接浏览器打开
-open index.html
-
-# 2. 本地服务器
-python3 -m http.server 8080
-
-# 3. 部署到 GitHub Pages / Vercel / Netlify
-# 上传 index.html 即可
-```
+12 道题定位 4 个文学维度倾向，从 16 位伟大文学家中匹配最契合的一位。
 
 ## 技术栈
 
-- HTML5 + CSS3 + Vanilla JS (ES6+)
-- 无框架、无构建工具、无后端
-- 暗色主题，响应式设计，移动端友好
+- **前端**: Nuxt 3 + Vue 3 + TypeScript
+- **后端**: Nuxt Server Routes (Nitro)
+- **数据库**: Supabase (PostgreSQL)
+- **样式**: CSS custom properties，暗色主题，响应式
 
-## 文件结构
+## 架构
+
+```
+浏览器 (Vue SPA)
+  │
+  │ GET /api/questions   → 获取题目和维度定义
+  │ POST /api/match      → 提交答案，服务端计算匹配
+  │
+  ▼
+Nuxt Server Routes (Nitro)
+  │
+  │ 评分算法 · 类型码计算 · 匹配逻辑（全部服务端）
+  │
+  ▼
+Supabase PostgreSQL
+  │
+  │ writers 表（文学家数据库，可动态管理）
+```
+
+**关键设计：** 评分算法和匹配逻辑全部在服务端运行，前端只负责展示。文学家数据存储在 Supabase 中，可通过 Dashboard 或 API 增删改，无需重新部署。
+
+## 快速开始
+
+```bash
+# 1. 安装依赖
+npm install
+
+# 2. 配置 Supabase
+cp .env.example .env
+# 编辑 .env 填入你的 Supabase 项目 URL 和密钥
+
+# 3. 初始化数据库
+# 在 Supabase SQL Editor 中运行 supabase/migrations/001_create_writers.sql
+
+# 4. 启动开发服务器
+npm run dev
+
+# 5. 生产构建
+npm run build
+npm run preview
+```
+
+## 项目结构
 
 ```
 soul-lit-match/
-├── index.html          # 完整应用（CSS + JS 内嵌）
-├── js/
-│   └── logic.js        # JS 逻辑源文件（已注入 index.html）
-├── docs/
-│   └── plans/
-│       └── 2026-05-10-soul-lit-match.md  # 实施计划
-└── README.md
+├── app.vue                    # 主应用组件（状态管理 + 视图路由）
+├── app.css                    # 全局样式
+├── nuxt.config.ts             # Nuxt 配置
+├── types/index.ts             # TypeScript 类型定义
+├── components/
+│   ├── WelcomeView.vue        # 欢迎页
+│   ├── QuizView.vue           # 答题页
+│   └── ResultView.vue         # 结果页（维度图、文学家详情、分享）
+├── server/
+│   ├── api/
+│   │   ├── questions.get.ts   # GET /api/questions
+│   │   └── match.post.ts      # POST /api/match（评分 + 匹配逻辑）
+│   └── data/
+│       ├── dimensions.ts      # 维度定义
+│       └── questions.ts       # 题目定义
+├── supabase/
+│   └── migrations/
+│       └── 001_create_writers.sql  # 建表 + 种子数据
+└── legacy/                    # 旧版静态 HTML（保留参考）
+    └── index.html
 ```
 
-## License
+## 文学家管理
 
-MIT
+所有文学家存储在 Supabase `writers` 表中。可通过 Supabase Dashboard 直接：
+
+- **新增文学家**：只需插入一行新数据，指定 `type_code`
+- **修改内容**：更新 `match_reason`、`keywords` 等字段，即时生效
+- **删除文学家**：删除对应行
+
+16 种类型码由 4 个维度组合（R/Z × G/L × D/F × N/W），新增类型码时需确保唯一性。
