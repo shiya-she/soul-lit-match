@@ -16,6 +16,8 @@
     --muted-foreground: 340 10% 55%;
     --accent: 345 55% 60%;
     --accent-foreground: 260 25% 10%;
+    --destructive: 0 72% 56%;
+    --destructive-foreground: 30 15% 85%;
     --border: 260 15% 26%;
     --ring: 345 55% 60%;
     --radius: 0.75rem;
@@ -29,5 +31,24 @@
     background-image:
       radial-gradient(ellipse at 20% 50%, hsl(345 55% 60% / 0.06) 0%, transparent 50%),
       radial-gradient(ellipse at 80% 20%, hsl(280 30% 55% / 0.04) 0%, transparent 50%);
+  }
+}
+
+@layer utilities {
+  .animate-stagger-1 { animation-delay: 0ms; }
+  .animate-stagger-2 { animation-delay: 80ms; }
+  .animate-stagger-3 { animation-delay: 160ms; }
+  .animate-stagger-4 { animation-delay: 240ms; }
+  .animate-stagger-5 { animation-delay: 320ms; }
+  .animate-stagger-6 { animation-delay: 400ms; }
+  .animate-stagger-7 { animation-delay: 480ms; }
+  .animate-stagger-8 { animation-delay: 560ms; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

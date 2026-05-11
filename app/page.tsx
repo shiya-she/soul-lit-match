@@ -97,8 +97,11 @@ export default function Home() {
   if (!mounted) return null
 
   return (
-    <div className="w-full max-w-xl px-6 py-10">
-      <Card className="p-8 sm:p-12">
+    <div className="w-full max-w-xl px-4 sm:px-6 py-8 sm:py-12">
+      <Card className="p-6 sm:p-10 lg:p-12 relative overflow-hidden border-border/60 shadow-2xl shadow-primary/5">
+        {/* Subtle top-edge glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+
         {page === 'welcome' && <WelcomeView onStart={startQuiz} />}
 
         {page === 'quiz' && questions.length > 0 && (
@@ -106,16 +109,24 @@ export default function Home() {
         )}
 
         {page === 'result' && loading && (
-          <div className="flex flex-col items-center gap-4 py-12 text-muted-foreground">
-            <Loader2 className="w-8 h-8 animate-spin text-primary" />
-            <span>正在寻找你的灵魂文学家...</span>
+          <div className="flex flex-col items-center gap-5 py-16">
+            <div className="relative">
+              <Loader2 className="w-10 h-10 animate-spin text-primary" />
+              <div className="absolute inset-0 rounded-full blur-xl bg-primary/20 animate-pulse" />
+            </div>
+            <p className="text-muted-foreground text-sm tracking-wider">正在寻找你的灵魂文学家...</p>
           </div>
         )}
 
         {page === 'result' && error && (
-          <div className="text-center py-12 text-red-400">
-            <p className="mb-4">{error}</p>
-            <button onClick={reset} className="text-primary underline">↩ 返回重试</button>
+          <div className="text-center py-16">
+            <p className="text-destructive mb-6">{error}</p>
+            <button
+              onClick={reset}
+              className="inline-flex items-center gap-2 text-primary hover:text-primary/80 underline underline-offset-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-2 py-1"
+            >
+              返回重试
+            </button>
           </div>
         )}
 
