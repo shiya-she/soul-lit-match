@@ -8,7 +8,7 @@ interface Props { onStart: () => void }
 export function WelcomeView({ onStart }: Props) {
   return (
     <div className="text-center">
-      <h1 className="font-serif text-3xl sm:text-4xl text-[#e8d5a3] tracking-wider mb-2">
+      <h1 className="font-serif text-3xl sm:text-4xl text-rose-200 tracking-wider mb-2">
         寻隐者
       </h1>
       <p className="text-muted-foreground text-sm tracking-[0.2em] mb-8">

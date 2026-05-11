@@ -47,7 +47,7 @@ export function ResultView({ result, onRetry }: Props) {
         <div className="text-6xl mb-3 animate-fade-in-up" style={{ animation: 'fade-in-up 0.6s ease, pulse 2s ease-in-out infinite 0.6s' }}>
           {m.portrait}
         </div>
-        <h2 className="font-serif text-3xl text-[#e8d5a3] mb-1">{m.name}</h2>
+        <h2 className="font-serif text-3xl text-rose-200 mb-1">{m.name}</h2>
         <p className="text-muted-foreground text-sm mb-0.5">{m.title}</p>
         <p className="text-muted-foreground text-xs">{m.era}</p>
       </div>
